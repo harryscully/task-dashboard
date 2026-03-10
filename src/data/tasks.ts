@@ -30,3 +30,14 @@ export const initialTasks: Task[] = [
   { id: "task-8", title: "Finally read the terms and conditions", priority: "low", columnId: "to-do" },
   { id: "task-9", title: "Overthink a minor social interaction from 2014", priority: "medium", columnId: "to-do" },
 ]
+
+export const initialTasksRestructured: Record<ColumnId, string[]> = {
+    "to-do": [],
+    "in-progress": [],
+    "review": [],
+    "done": []
+}
+
+for (const task of initialTasks) {
+    initialTasksRestructured[task.columnId].push(task.id)
+}

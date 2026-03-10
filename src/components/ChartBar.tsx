@@ -1,15 +1,9 @@
 "use client"
-import { initialTasks, columns } from "@/data/tasks";
+import { columns } from "@/data/tasks";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-
-const chartData = columns.map(column => ({
-    column: column.title,
-    count: initialTasks.filter(t => t.columnId === column.id).length
-}))
-
-const totalTasks = initialTasks.length
+import { useTasks } from "@/context/TaskContext";
 
 const chartConfig = {
     count: {
@@ -19,6 +13,14 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function ChartBar() {
+
+    const { tasks } = useTasks()
+
+    const chartData = columns.map(column => ({
+        column: column.title,
+        count: tasks[column.id].length
+    }))
+
     return (
         <Card className="flex flex-col aspect-square max-h-90">
             <CardHeader>
@@ -33,17 +35,17 @@ export default function ChartBar() {
                 >
                     <BarChart data={chartData}>
                         <CartesianGrid vertical={false} />
-                        <XAxis 
+                        <XAxis
                             dataKey="column"
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
                         />
-                        <ChartTooltip 
+                        <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="count" fill="var(--color-count)" radius={8}/>
+                        <Bar dataKey="count" fill="var(--color-count)" radius={8} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>

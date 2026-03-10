@@ -1,25 +1,13 @@
 "use client"
 import KanbanColumn from "./KanbanColumn";
-import { columns, initialTasks } from "@/data/tasks"
-import type { ColumnId } from "@/data/tasks"
-import { useState } from "react"
+import { columns } from "@/data/tasks"
 import { DragDropProvider } from '@dnd-kit/react'
 import { move } from '@dnd-kit/helpers'
-
-const initialTasksRestructured: Record<ColumnId, string[]> = {
-    "to-do": [],
-    "in-progress": [],
-    "review": [],
-    "done": []
-}
-
-for (const task of initialTasks) {
-    initialTasksRestructured[task.columnId].push(task.id)
-}
+import { useTasks } from "@/context/TaskContext";
 
 
 export default function KanbanBoard() {
-    const [tasks, setTasks] = useState<Record<ColumnId, string[]>>(initialTasksRestructured)
+    const { tasks, setTasks } = useTasks()
 
     return (
         <DragDropProvider
