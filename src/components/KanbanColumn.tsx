@@ -21,7 +21,7 @@ export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
     })
 
     return (
-        <Card ref={ref} className="flex-1 h-full">
+        <Card ref={ref} className="flex-1 h-full min-w-50">
             <CardHeader className="flex justify-between">
                 <CardTitle>{column.title}</CardTitle>
                 <Badge variant="secondary">{tasks.length} tasks</Badge>

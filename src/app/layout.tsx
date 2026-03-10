@@ -8,7 +8,7 @@ import { TaskProvider } from "@/context/TaskContext";
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Task Dashboard",
+  title: "Dashboard",
   description: "A Kanban dashboard built with dnd-kit and Recharts",
 };
 
