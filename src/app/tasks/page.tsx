@@ -1,9 +1,9 @@
 import KanbanBoard from "@/components/KanbanBoard";
 
-export default function Home() {
+export default function Tasks() {
   return (
     <div className="h-full">
-      <h1>Dashboard analytics</h1>
+      <KanbanBoard />
     </div>
   );
 }
