@@ -3,7 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
-
+/* --preset a1VO2MK */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
