@@ -1,9 +1,9 @@
-import KanbanBoard from "@/components/KanbanBoard";
+import ChartPie from "@/components/ChartPie";
 
 export default function Home() {
   return (
     <div className="h-full">
-      <h1>Dashboard analytics</h1>
+      <ChartPie />
     </div>
   );
 }
