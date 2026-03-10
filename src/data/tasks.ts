@@ -20,15 +20,17 @@ export const columns:Column[] = [
 ]
 
 export const initialTasks: Task[] = [
-  { id: "task-1", title: "Teach the dog to open the fridge", priority: "high", columnId: "done" },
-  { id: "task-2", title: "Apologise to the houseplant", priority: "low", columnId: "done" },
-  { id: "task-3", title: "Investigate suspicious biscuit disappearance", priority: "high", columnId: "in-progress" },
-  { id: "task-4", title: "Write strongly worded letter to the weather", priority: "medium", columnId: "in-progress" },
-  { id: "task-5", title: "Negotiate bedtime with a toddler", priority: "high", columnId: "review" },
-  { id: "task-6", title: "Determine if the sofa has eaten the remote", priority: "low", columnId: "review" },
-  { id: "task-7", title: "Attend mandatory fun team building event", priority: "medium", columnId: "to-do" },
-  { id: "task-8", title: "Finally read the terms and conditions", priority: "low", columnId: "to-do" },
-  { id: "task-9", title: "Overthink a minor social interaction from 2014", priority: "medium", columnId: "to-do" },
+  { id: "task-1", title: "Build a rocket", priority: "high", columnId: "to-do" },
+  { id: "task-2", title: "Fight a mummy", priority: "low", columnId: "to-do" },
+  { id: "task-3", title: "Climb up the Eiffel Tower", priority: "high", columnId: "in-progress" },
+  { id: "task-4", title: "Discover something that doesn't exist", priority: "medium", columnId: "in-progress" },
+  { id: "task-5", title: "Give a monkey a shower", priority: "high", columnId: "in-progress" },
+  { id: "task-6", title: "Surf tidal waves", priority: "low", columnId: "in-progress" },
+  { id: "task-7", title: "Create nanobots", priority: "medium", columnId: "in-progress" },
+  { id: "task-8", title: "Locate Frankenstein's brain", priority: "low", columnId: "review" },
+  { id: "task-9", title: "Find a dodo bird", priority: "medium", columnId: "review" },
+  { id: "task-10", title: "Paint a continent", priority: "medium", columnId: "review" },
+  { id: "task-11", title: "Drive your sister insane", priority: "medium", columnId: "done" },
 ]
 
 export const initialTasksRestructured: Record<ColumnId, string[]> = {
