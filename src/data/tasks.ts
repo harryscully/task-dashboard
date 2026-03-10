@@ -19,7 +19,7 @@ export const columns:Column[] = [
     {id: "done", title: "Done"}
 ]
 
-export const tasks: Task[] = [
+export const initialTasks: Task[] = [
   { id: "task-1", title: "Teach the dog to open the fridge", priority: "high", columnId: "done" },
   { id: "task-2", title: "Apologise to the houseplant", priority: "low", columnId: "done" },
   { id: "task-3", title: "Investigate suspicious biscuit disappearance", priority: "high", columnId: "in-progress" },

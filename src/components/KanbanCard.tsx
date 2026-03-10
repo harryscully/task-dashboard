@@ -1,6 +1,8 @@
+"use client"
 import { Badge } from "./ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
 import type { Task } from "@/data/tasks";
+import { useDraggable } from "@dnd-kit/react";
 
 const priorityVariant: Record<Task["priority"], string> = {
     "high": "bg-red-950 text-red-300",
@@ -8,9 +10,14 @@ const priorityVariant: Record<Task["priority"], string> = {
     "low": "bg-green-950 text-green-300"
 }
 
+
 export default function KanbanCard({ task }: { task: Task }) {
+    const { ref } = useDraggable({
+        id: task.id,
+    })
+
     return (
-        <Card className="bg-accent">
+        <Card ref={ref} className="bg-accent">
             <CardHeader>
                 <CardTitle>
                     {task.title}
