@@ -12,7 +12,7 @@ const navLinks = [
 export default function Navbar() {
     const pathname = usePathname()
     return (
-        <NavigationMenu className="w-fit">
+        <NavigationMenu className="w-full">
             <NavigationMenuList className="flex gap-2">
                 {navLinks.map((link) => (
                     <NavigationMenuItem key={link.displayName}>

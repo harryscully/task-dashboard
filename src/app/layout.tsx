@@ -19,11 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cn("dark font-sans", nunitoSans.variable)}>
-      <body className="antialiased h-svh w-screen flex flex-col">
-        <div className="shrink-0 border-b px-8 py-2">
+      <body className="antialiased h-svh flex flex-col">
+        <div className="shrink-0 border-b px-2 sm:p-6 py-2">
           <Navbar />
         </div>
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 sm:p-8">
           <TaskProvider>
             {children}
           </TaskProvider>
