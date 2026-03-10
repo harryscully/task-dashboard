@@ -10,7 +10,7 @@ const priorityVariant: Record<Task["priority"], string> = {
 
 export default function KanbanCard({ task }: { task: Task }) {
     return (
-        <Card>
+        <Card className="bg-accent">
             <CardHeader>
                 <CardTitle>
                     {task.title}

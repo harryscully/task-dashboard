@@ -9,18 +9,20 @@ type KanbanColumnProps = {
     tasks: Task[]
 }
 
-export default function KanbanColumn({column, tasks}: KanbanColumnProps) {
+export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
     return (
-        <Card>
+        <Card className="flex-1">
             <CardHeader className="flex justify-between">
                 <CardTitle>{column.title}</CardTitle>
                 <Badge variant="secondary">{tasks.length} tasks</Badge>
             </CardHeader>
             <CardContent>
                 <ScrollArea>
-                    {tasks.map((task) => (
-                        <KanbanCard key={task.id} task={task} />
-                    ))}
+                    <div className="flex flex-col gap-4">
+                        {tasks.map((task) => (
+                            <KanbanCard key={task.id} task={task} />
+                        ))}
+                    </div>
                 </ScrollArea>
             </CardContent>
         </Card>
