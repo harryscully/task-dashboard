@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", nunitoSans.variable)}>
+    <html lang="en" className={cn("dark font-sans", nunitoSans.variable)}>
       <body className="antialiased">{children}</body>
     </html>
   );
