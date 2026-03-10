@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cn("dark font-sans", nunitoSans.variable)}>
-      <body className="antialiased p-8 min-h-svh w-screen">
+      <body className="antialiased p-8 h-svh w-screen">
         {children}
       </body>
     </html>
