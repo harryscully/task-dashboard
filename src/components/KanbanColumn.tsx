@@ -2,18 +2,22 @@
 import { Badge } from "./ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card"
 import { ScrollArea } from "./ui/scroll-area";
-import type { Column, Task } from "@/data/tasks"
+import { Column, initialTasks } from "@/data/tasks"
 import KanbanCard from "./KanbanCard";
 import { useDroppable } from "@dnd-kit/react";
+import { CollisionPriority } from '@dnd-kit/abstract';
 
 type KanbanColumnProps = {
     column: Column,
-    tasks: Task[]
+    tasks: string[]
 }
 
 export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
-    const {ref} = useDroppable({
-        id: column.id
+    const { ref } = useDroppable({
+        id: column.id,
+        type: 'column',
+        accept: ['item'],
+        collisionPriority: CollisionPriority.Low
     })
 
     return (
@@ -25,9 +29,12 @@ export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
             <CardContent>
                 <ScrollArea>
                     <div className="flex flex-col gap-4">
-                        {tasks.map((task, index) => (
-                            <KanbanCard key={task.id} task={task} />
-                        ))}
+                        {tasks.map((taskId, index) => {
+                            const task = initialTasks.find(t => t.id === taskId)
+                            if (!task) return null
+                            return <KanbanCard key={taskId} task={task} index={index} column={column.id} />
+                        }
+                        )}
                     </div>
                 </ScrollArea>
             </CardContent>

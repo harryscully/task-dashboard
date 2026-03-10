@@ -1,8 +1,9 @@
 "use client"
 import { Badge } from "./ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
-import type { Task } from "@/data/tasks";
-import { useDraggable } from "@dnd-kit/react";
+import type { Task, ColumnId } from "@/data/tasks";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { DragOverlay } from "@dnd-kit/react";
 
 const priorityVariant: Record<Task["priority"], string> = {
     "high": "bg-red-950 text-red-300",
@@ -11,13 +12,17 @@ const priorityVariant: Record<Task["priority"], string> = {
 }
 
 
-export default function KanbanCard({ task }: { task: Task }) {
-    const { ref } = useDraggable({
+export default function KanbanCard({ task, index, column }: { task: Task, index: number, column: ColumnId }) {
+    const { ref } = useSortable({
         id: task.id,
+        index,
+        type: 'item',
+        accept: ['item'],
+        group: column
     })
 
     return (
-        <Card ref={ref} className="bg-accent">
+        <Card ref={ref} className="bg-accent cursor-grab">
             <CardHeader>
                 <CardTitle>
                     {task.title}
