@@ -1,6 +1,6 @@
 "use client"
-import { Badge } from "./ui/badge";
-import { Card, CardHeader, CardContent, CardTitle } from "./ui/card";
+import { Badge } from "../ui/badge";
+import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 import type { Task, ColumnId } from "@/data/tasks";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { DragOverlay } from "@dnd-kit/react";

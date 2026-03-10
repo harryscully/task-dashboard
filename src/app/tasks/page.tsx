@@ -1,4 +1,4 @@
-import KanbanBoard from "@/components/KanbanBoard";
+import KanbanBoard from "@/components/kanban/KanbanBoard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
-import ChartPie from "@/components/ChartPie";
-import ChartBar from "@/components/ChartBar";
+import ChartPie from "@/components/charts/ChartPie";
+import ChartBar from "@/components/charts/ChartBar";
 
 export default function Home() {
   return (

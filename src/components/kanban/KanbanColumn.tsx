@@ -1,7 +1,7 @@
 "use client"
-import { Badge } from "./ui/badge";
-import { Card, CardHeader, CardContent, CardTitle } from "./ui/card"
-import { ScrollArea } from "./ui/scroll-area";
+import { Badge } from "../ui/badge";
+import { Card, CardHeader, CardContent, CardTitle } from "../ui/card"
+import { ScrollArea } from "../ui/scroll-area";
 import { Column, initialTasks } from "@/data/tasks"
 import KanbanCard from "./KanbanCard";
 import { useDroppable } from "@dnd-kit/react";
