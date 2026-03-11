@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import { TaskProvider } from "@/context/TaskContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -18,16 +19,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("dark font-sans", nunitoSans.variable)}>
+    <html lang="en" className={cn("dark font-sans", nunitoSans.variable)} suppressHydrationWarning>
       <body className="antialiased h-svh flex flex-col">
-        <div className="shrink-0 border-b px-2 sm:p-6 py-2">
-          <Navbar />
-        </div>
-        <main className="flex-1 p-4 sm:p-8">
-          <TaskProvider>
-            {children}
-          </TaskProvider>
-        </main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="shrink-0 border-b px-2 sm:p-6 py-2">
+            <Navbar />
+          </div>
+          <main className="flex-1 p-4 sm:p-8">
+            <TaskProvider>
+              {children}
+            </TaskProvider>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
