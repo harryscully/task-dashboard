@@ -32,7 +32,7 @@ const chartConfig = {
 
 export default function ChartPie() {
     return (
-        <Card className="flex flex-col aspect-square max-h-90">
+        <Card className="flex flex-col w-full sm:w-96">
             <CardHeader>
                 <CardTitle>
                     Tasks by Priority
