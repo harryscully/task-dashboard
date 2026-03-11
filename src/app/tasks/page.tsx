@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function Tasks() {
   return (
-    <div className="h-full">
+    <div className="h-full min-w-max">
       <KanbanBoard />
     </div>
   );
