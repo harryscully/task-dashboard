@@ -28,7 +28,7 @@ export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
             </CardHeader>
             <CardContent>
                 <ScrollArea>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 p-px">
                         {tasks.map((taskId, index) => {
                             const task = initialTasks.find(t => t.id === taskId)
                             if (!task) return null
