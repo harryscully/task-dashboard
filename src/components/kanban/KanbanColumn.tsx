@@ -21,13 +21,13 @@ export default function KanbanColumn({ column, tasks }: KanbanColumnProps) {
     })
 
     return (
-        <Card ref={ref} className="flex-1 h-full min-w-50">
-            <CardHeader className="flex justify-between">
+        <Card ref={ref} className="flex-1 h-full min-w-50 flex flex-col">
+            <CardHeader className="flex justify-between shrink-0">
                 <CardTitle>{column.title}</CardTitle>
                 <Badge variant="secondary">{tasks.length} tasks</Badge>
             </CardHeader>
-            <CardContent>
-                <ScrollArea>
+            <CardContent className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full">
                     <div className="flex flex-col gap-4 p-px">
                         {tasks.map((taskId, index) => {
                             const task = initialTasks.find(t => t.id === taskId)
