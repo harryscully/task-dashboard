@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("dark font-sans", nunitoSans.variable)} suppressHydrationWarning>
+    <html lang="en" className={cn("font-sans", nunitoSans.variable)} suppressHydrationWarning>
       <body className="antialiased h-svh flex flex-col">
         <ThemeProvider
           attribute="class"
@@ -30,7 +30,7 @@ export default function RootLayout({
           <div className="shrink-0 border-b px-2 sm:p-6 py-2">
             <Navbar />
           </div>
-          <main className="flex-1 p-4 sm:p-8">
+          <main className="flex-1 p-4 sm:p-8 overflow-auto">
             <TaskProvider>
               {children}
             </TaskProvider>
