@@ -1,7 +1,6 @@
 "use client"
 import KanbanColumn from "./KanbanColumn";
 import { DragDropProvider } from '@dnd-kit/react'
-import { move } from '@dnd-kit/helpers'
 import { useTasks } from "@/context/TaskContext";
 import confetti from "canvas-confetti";
 import { useState } from "react";
@@ -19,24 +18,27 @@ export default function KanbanBoard() {
                 })?.[0])
                 setSourceCol(col ?? null)
             }}
-            onDragOver={(event) => {
-                setTasks((tasks) => move(tasks, event));
-            }}
             onDragEnd={(event) => {
                 if (event.canceled) return
-                const targetId = event.operation.target?.id as string
-                const doneColumnId = Object.entries(columns).find(([_, title]) => title === "Done")?.[0]
-                const isTargetDone = doneColumnId ? tasks[Number(doneColumnId)].includes(Number(targetId)) : false
-                if (isTargetDone && sourceCol !== Number(doneColumnId)) {
-                    confetti({
-                        angle: 270,
-                        particleCount: 200,
-                        spread: 80,
-                        origin: { y: -0.3 }
-                    })
-                }
+                const sourceId = Number(event.operation.source?.id)
+                const targetId = event.operation.target?.id
 
-                setTasks((tasks) => move(tasks, event))
+                if (!targetId) return
+
+                // find source column
+                const sourceColumnId = Number(
+                    Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId))?.[0]
+                )
+                const targetColumnId = Number(targetId)
+
+                if (sourceColumnId === targetColumnId) return
+
+                setTasks(prev => {
+                    const next = { ...prev }
+                    next[sourceColumnId] = next[sourceColumnId].filter(id => id !== sourceId)
+                    next[targetColumnId] = [...next[targetColumnId], sourceId]
+                    return next
+                })
             }}
         >
             <div className="flex gap-6 w-full h-full">

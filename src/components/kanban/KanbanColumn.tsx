@@ -35,7 +35,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                         {tasks.map((taskId, index) => {
                             const task = taskMap[taskId]
                             if (!task) return null
-                            return <KanbanCard key={taskId} task={task} index={index} column={columnId} />
+                            return <KanbanCard key={taskId} task={task} column={columnId} />
                         }
                         )}
                     </div>
