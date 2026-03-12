@@ -1,53 +1,108 @@
 "use client"
 import KanbanColumn from "./KanbanColumn";
-import { DragDropProvider } from '@dnd-kit/react'
+import {
+    DndContext,
+    DragEndEvent,
+    DragOverEvent,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragOverlay,
+    DragStartEvent,
+} from '@dnd-kit/core'
+import { arrayMove } from "@dnd-kit/sortable";
 import { useTasks } from "@/context/TaskContext";
 import confetti from "canvas-confetti";
 import { useState } from "react";
+import KanbanCard from "./KanbanCard";
+import type { TaskModel } from "../../../generated/prisma/models/Task";
 
 export default function KanbanBoard() {
-    const { tasks, setTasks, columns } = useTasks()
+    const { tasks, setTasks, columns, taskMap } = useTasks()
+    const [activeTask, setActiveTask] = useState<TaskModel | null>(null)
     const [sourceCol, setSourceCol] = useState<string | null>(null)
 
+    const sensors = useSensors(useSensor(PointerSensor, {
+        activationConstraint: { distance: 5 }
+    }))
+
+    function findColumn(taskId: string) {
+        return Object.entries(tasks).find(([_, ids]) => ids.includes(taskId))?.[0]
+    }
+
+    function onDragStart(event: DragStartEvent) {
+        const id = event.active.id as string
+        const task = taskMap[id]
+        if (task) setActiveTask(task)
+        setSourceCol(findColumn(id) ?? null)
+    }
+
+    function onDragOver(event: DragOverEvent) {
+        const { active, over } = event
+        if (!over) return
+
+        const activeId = active.id as string
+        const overId = over.id as string
+
+        const activeCol = findColumn(activeId)
+        // over could be a column id or a task id
+        const overCol = tasks[overId] ? overId : findColumn(overId)
+
+        if (!activeCol || !overCol || activeCol === overCol) return
+
+        setTasks(prev => ({
+            ...prev,
+            [activeCol]: prev[activeCol].filter(id => id !== activeId),
+            [overCol]: [...prev[overCol], activeId]
+        }))
+    }
+
+    function onDragEnd(event: DragEndEvent) {
+        const { active, over } = event
+        setActiveTask(null)
+        if (!over) return
+
+        const activeId = active.id as string
+        const overId = over.id as string
+
+        const activeCol = findColumn(activeId)
+        const overCol = tasks[overId] ? overId : findColumn(overId)
+
+        if (!activeCol || !overCol) return
+
+        // confetti if dropped into Done
+        const doneColId = Object.entries(columns).find(([_, t]) => t === "Done")?.[0]
+        
+        if (overCol === doneColId && sourceCol !== doneColId) {
+            confetti({ angle: 270, particleCount: 200, spread: 80, origin: { y: -0.3 } })
+        }
+
+        if (activeCol === overCol) {
+            // reorder within same column
+            setTasks(prev => {
+                const oldIndex = prev[activeCol].indexOf(activeId)
+                const newIndex = prev[activeCol].indexOf(overId)
+                if (oldIndex === newIndex) return prev
+                return { ...prev, [activeCol]: arrayMove(prev[activeCol], oldIndex, newIndex) }
+            })
+        }
+    }
+
     return (
-        <DragDropProvider
-            onDragStart={(event) => {
-                const sourceId = event.operation.source?.id?.toString().replace('task-', '')
-                const col = Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId ?? ''))?.[0]
-                setSourceCol(col ?? null)
-            }}
-            onDragEnd={(event) => {
-                if (event.canceled) return
-                const sourceId = event.operation.source?.id?.toString().replace('task-', '')
-                const targetColId = event.operation.target?.id?.toString().replace('column-', '')
-                if (!sourceId || !targetColId) return
-
-                const doneColumnId = Object.entries(columns).find(([_, title]) => title === "Done")?.[0]
-                if (targetColId === doneColumnId && sourceCol !== doneColumnId) {
-                    confetti({
-                        angle: 270,
-                        particleCount: 200,
-                        spread: 80,
-                        origin: { y: -0.3 }
-                    })
-                }
-
-                setTasks(prev => {
-                    if (!sourceCol || sourceCol === targetColId) return prev
-                    if (!prev[targetColId]) return prev
-                    return {
-                        ...prev,
-                        [sourceCol]: prev[sourceCol].filter(id => id !== sourceId),
-                        [targetColId]: [...prev[targetColId], sourceId]
-                    }
-                })
-            }}
+        <DndContext
+            sensors={sensors}
+            onDragStart={onDragStart}
+            onDragOver={onDragOver}
+            onDragEnd={onDragEnd}
         >
             <div className="flex gap-6 w-full h-full">
                 {Object.entries(columns).map(([id, title]) => (
                     <KanbanColumn key={id} columnId={id} title={title} tasks={tasks[id]} />
                 ))}
             </div>
-        </DragDropProvider>
+            <DragOverlay>
+                {activeTask ? <KanbanCard task={activeTask} /> : null}
+            </DragOverlay>
+        </DndContext>
     )
 }
