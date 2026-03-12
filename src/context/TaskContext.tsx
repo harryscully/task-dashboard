@@ -4,14 +4,14 @@ import type { TaskModel } from "../../generated/prisma/models/Task"
 
 type TaskContextProps = {
   children: React.ReactNode
-  initialTasks: Record<number, number[]>
+  initialTasks: Record<string, number[]>
   initialColumns: Record<number, string>
   taskMap: Record<number, TaskModel>
 }
 
 type TaskContextType = {
-  tasks: Record<number, number[]>
-  setTasks: Dispatch<SetStateAction<Record<number, number[]>>>
+  tasks: Record<string, number[]>
+  setTasks: Dispatch<SetStateAction<Record<string, number[]>>>
   columns: Record<number, string>,
   taskMap: Record<number, TaskModel>
 }
@@ -19,7 +19,7 @@ type TaskContextType = {
 export const TaskContext = createContext<TaskContextType | null>(null)
 
 export function TaskProvider({ children, initialTasks, initialColumns, taskMap }:TaskContextProps) {
-  const [tasks, setTasks] = useState<Record<number, number[]>>(initialTasks)
+  const [tasks, setTasks] = useState<Record<string, number[]>>(initialTasks)
 
   return (
     <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap: taskMap }} >

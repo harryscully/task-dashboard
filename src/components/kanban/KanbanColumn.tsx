@@ -15,7 +15,7 @@ type KanbanColumnProps = {
 
 export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnProps) {
     const { ref } = useDroppable({
-        id: columnId,
+        id: `column-${columnId}`,
         type: 'column',
         accept: ['item'],
         collisionPriority: CollisionPriority.Low
@@ -35,7 +35,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                         {tasks.map((taskId, index) => {
                             const task = taskMap[taskId]
                             if (!task) return null
-                            return <KanbanCard key={taskId} task={task} column={columnId} />
+                            return <KanbanCard key={taskId} task={task} column={columnId} index={index} />
                         }
                         )}
                     </div>

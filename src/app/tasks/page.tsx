@@ -11,12 +11,12 @@ export default async function Tasks() {
 
   const tasksData = await prisma.task.findMany()
   const columnsData = await prisma.column.findMany()
-  const tasksDataRestructured: Record<number, number[]> = {}
+  const tasksDataRestructured: Record<string, number[]> = {}
   for (const column of columnsData) {
-    tasksDataRestructured[column.id] = []
+    tasksDataRestructured[column.id.toString()] = []
   }
   for (const task of tasksData) {
-    tasksDataRestructured[task.columnId].push(task.id)
+    tasksDataRestructured[task.columnId.toString()].push(task.id)
   }
 
   const initialColumns: Record<number, string> = {}

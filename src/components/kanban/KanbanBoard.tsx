@@ -6,44 +6,46 @@ import confetti from "canvas-confetti";
 import { useState } from "react";
 
 export default function KanbanBoard() {
-    const { tasks, setTasks, columns, taskMap } = useTasks()
-    const [sourceCol, setSourceCol] = useState<number | null>(null)
+    const { tasks, setTasks, columns } = useTasks()
+    const [sourceCol, setSourceCol] = useState<string | null>(null)
 
     return (
         <DragDropProvider
             onDragStart={(event) => {
-                const sourceId = Number(event.operation.source?.id)
-                const col = Number(Object.entries(tasks).find(([_, ids]) => {
-                    return ids.includes(sourceId)
-                })?.[0])
+                const sourceId = Number(event.operation.source?.id?.toString().replace('task-', ''))
+                const col = Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId))?.[0]
                 setSourceCol(col ?? null)
             }}
             onDragEnd={(event) => {
                 if (event.canceled) return
-                const sourceId = Number(event.operation.source?.id)
-                const targetId = event.operation.target?.id
+                const sourceId = Number(event.operation.source?.id?.toString().replace('task-', ''))
+                const targetColId = event.operation.target?.id?.toString().replace('column-', '')
+                if (!targetColId) return
 
-                if (!targetId) return
-
-                // find source column
-                const sourceColumnId = Number(
-                    Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId))?.[0]
-                )
-                const targetColumnId = Number(targetId)
-
-                if (sourceColumnId === targetColumnId) return
+                const doneColumnId = Object.entries(columns).find(([_, title]) => title === "Done")?.[0]
+                if (targetColId === doneColumnId && sourceCol !== doneColumnId) {
+                    confetti({
+                        angle: 270,
+                        particleCount: 200,
+                        spread: 80,
+                        origin: { y: -0.3 }
+                    })
+                }
 
                 setTasks(prev => {
-                    const next = { ...prev }
-                    next[sourceColumnId] = next[sourceColumnId].filter(id => id !== sourceId)
-                    next[targetColumnId] = [...next[targetColumnId], sourceId]
-                    return next
+                    if (!sourceCol || sourceCol === targetColId) return prev
+                    if (!prev[targetColId]) return prev  // guard against missing key
+                    return {
+                        ...prev,
+                        [sourceCol]: prev[sourceCol].filter(id => id !== sourceId),
+                        [targetColId]: [...prev[targetColId], sourceId]
+                    }
                 })
             }}
         >
             <div className="flex gap-6 w-full h-full">
                 {Object.entries(columns).map(([id, title]) => (
-                    <KanbanColumn key={id} columnId={Number(id)} title={title} tasks={tasks[Number(id)]} />
+                    <KanbanColumn key={id} columnId={Number(id)} title={title} tasks={tasks[id]} />
                 ))}
             </div>
         </DragDropProvider>

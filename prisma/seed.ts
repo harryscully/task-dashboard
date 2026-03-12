@@ -36,37 +36,17 @@ async function main() {
     })
 
     // COLUMNS
-    const toDo = await prisma.column.upsert({
-        where: { order: 1 },
-        update: {},
-        create: {
-            title: "To Do",
-            order: 1
-        }
+    const toDo = await prisma.column.create({
+        data: { title: "To Do", order: 1,createdAt: new Date() }
     })
-    const inProg = await prisma.column.upsert({
-        where: { order: 2 },
-        update: {},
-        create: {
-            title: "In Progress",
-            order: 2
-        }
+    const inProg = await prisma.column.create({
+        data: { title: "In Progress", order: 2,createdAt: new Date() }
     })
-    const review = await prisma.column.upsert({
-        where: { order: 3 },
-        update: {},
-        create: {
-            title: "Review",
-            order: 3
-        }
+    const review = await prisma.column.create({
+        data: { title: "Review", order: 3,createdAt: new Date() }
     })
-    const done = await prisma.column.upsert({
-        where: { order: 4 },
-        update: {},
-        create: {
-            title: "Done",
-            order: 4
-        }
+    const done = await prisma.column.create({
+        data: { title: "Done", order: 4,createdAt: new Date() }
     })
 
     // TASKS
