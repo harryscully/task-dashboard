@@ -1,3 +1,4 @@
+"use client"
 import ChartPie from "@/components/charts/ChartPie";
 import ChartBar from "@/components/charts/ChartBar";
 
