@@ -3,7 +3,6 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
-import { TaskProvider } from "@/context/TaskContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" });
@@ -31,9 +30,7 @@ export default function RootLayout({
             <Navbar />
           </div>
           <main className="flex-1 p-4 sm:p-8 overflow-auto">
-            <TaskProvider>
               {children}
-            </TaskProvider>
           </main>
         </ThemeProvider>
       </body>
