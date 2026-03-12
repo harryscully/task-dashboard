@@ -8,9 +8,9 @@ import { CollisionPriority } from '@dnd-kit/abstract';
 import { useTasks } from "@/context/TaskContext";
 
 type KanbanColumnProps = {
-    columnId: number,
+    columnId: string,
     title: string,
-    tasks: number[]
+    tasks: string[]
 }
 
 export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnProps) {
@@ -35,7 +35,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                         {tasks.map((taskId, index) => {
                             const task = taskMap[taskId]
                             if (!task) return null
-                            return <KanbanCard key={taskId} task={task} column={columnId} index={index} />
+                            return <KanbanCard key={taskId} task={task} />
                         }
                         )}
                     </div>

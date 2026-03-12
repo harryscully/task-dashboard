@@ -12,15 +12,15 @@ export default function KanbanBoard() {
     return (
         <DragDropProvider
             onDragStart={(event) => {
-                const sourceId = Number(event.operation.source?.id?.toString().replace('task-', ''))
-                const col = Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId))?.[0]
+                const sourceId = event.operation.source?.id?.toString().replace('task-', '')
+                const col = Object.entries(tasks).find(([_, ids]) => ids.includes(sourceId ?? ''))?.[0]
                 setSourceCol(col ?? null)
             }}
             onDragEnd={(event) => {
                 if (event.canceled) return
-                const sourceId = Number(event.operation.source?.id?.toString().replace('task-', ''))
+                const sourceId = event.operation.source?.id?.toString().replace('task-', '')
                 const targetColId = event.operation.target?.id?.toString().replace('column-', '')
-                if (!targetColId) return
+                if (!sourceId || !targetColId) return
 
                 const doneColumnId = Object.entries(columns).find(([_, title]) => title === "Done")?.[0]
                 if (targetColId === doneColumnId && sourceCol !== doneColumnId) {
@@ -34,7 +34,7 @@ export default function KanbanBoard() {
 
                 setTasks(prev => {
                     if (!sourceCol || sourceCol === targetColId) return prev
-                    if (!prev[targetColId]) return prev  // guard against missing key
+                    if (!prev[targetColId]) return prev
                     return {
                         ...prev,
                         [sourceCol]: prev[sourceCol].filter(id => id !== sourceId),
@@ -45,7 +45,7 @@ export default function KanbanBoard() {
         >
             <div className="flex gap-6 w-full h-full">
                 {Object.entries(columns).map(([id, title]) => (
-                    <KanbanColumn key={id} columnId={Number(id)} title={title} tasks={tasks[id]} />
+                    <KanbanColumn key={id} columnId={id} title={title} tasks={tasks[id]} />
                 ))}
             </div>
         </DragDropProvider>

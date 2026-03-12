@@ -1,7 +1,7 @@
 "use client"
 import { Badge } from "../ui/badge";
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
-import { useSortable } from "@dnd-kit/react/sortable";
+import { useDraggable } from "@dnd-kit/react";
 import type { TaskModel } from "../../../generated/prisma/models/Task"
 
 const priorityVariant: Record<TaskModel["priority"], string> = {
@@ -10,11 +10,9 @@ const priorityVariant: Record<TaskModel["priority"], string> = {
     "LOW": "bg-green-950 text-green-300"
 }
 
-export default function KanbanCard({ task, column, index}: { task: TaskModel, column: number, index:number }) {
-    const { ref } = useSortable({
+export default function KanbanCard({ task }: { task: TaskModel }) {
+    const { ref } = useDraggable({
         id: `task-${task.id}`,
-        group: column.toString(),
-        index,
         type: 'item',
     })
 
