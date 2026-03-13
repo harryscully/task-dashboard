@@ -4,11 +4,17 @@ import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { TaskModel } from "../../../generated/prisma/models/Task"
-
-const priorityVariant: Record<TaskModel["priority"], string> = {
+import { useTheme } from "next-themes";
+const priorityVariantDark: Record<TaskModel["priority"], string> = {
     "HIGH": "bg-red-950 text-red-300",
     "MEDIUM": "bg-blue-950 text-blue-300",
     "LOW": "bg-green-950 text-green-300"
+}
+
+const priorityVariantLight: Record<TaskModel["priority"], string> = {
+    "HIGH": "bg-red-300 text-red-950",
+    "MEDIUM": "bg-blue-300 text-blue-950",
+    "LOW": "bg-green-300 text-green-950"
 }
 
 export default function KanbanCard({ task }: { task: TaskModel }) {
@@ -17,6 +23,9 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
         data: { type: 'task', task }
     })
 
+    const { resolvedTheme } = useTheme()
+    const priorityVariant = resolvedTheme === "dark" ? priorityVariantDark : priorityVariantLight
+    
     return (
         <Card
             ref={setNodeRef}
