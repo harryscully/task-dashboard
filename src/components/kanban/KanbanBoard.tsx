@@ -38,7 +38,7 @@ export default function KanbanBoard() {
         setSourceCol(findColumn(id) ?? null)
     }
 
-    function onDragOver(event: DragOverEvent) {
+    async function onDragOver(event: DragOverEvent) {
         const { active, over } = event
         if (!over) return
 
@@ -58,7 +58,7 @@ export default function KanbanBoard() {
         }))
 
         if (activeCol !== overCol) {
-            updateTaskColumn(activeId, overCol)
+            await updateTaskColumn(activeId, overCol)
         }
     }
 
