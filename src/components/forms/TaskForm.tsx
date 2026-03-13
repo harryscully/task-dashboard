@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
 import { useState } from "react"
 import { format } from "date-fns"
+import { useTasks } from "@/context/TaskContext"
 
 export default function TaskForm({ columnId }: { columnId: string }) {
     const form = useForm<TaskSchema>({
@@ -26,8 +27,9 @@ export default function TaskForm({ columnId }: { columnId: string }) {
     function onSubmit(data: TaskSchema) {
         createTask(data)
     }
-    
-    const [date,setDate] = useState<Date>()
+
+    const { columns } = useTasks()
+
     return (
         <form
             className="px-4"
@@ -80,6 +82,43 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                 <FieldError
                                     errors={[fieldState.error]}
                                 />)}
+                        </Field>
+                    )}
+                />
+
+                {/* COLUMN */}
+                <Controller
+                    name="columnId"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel className="gap-1">
+                                Status
+                                <span className="text-destructive">*</span>
+                            </FieldLabel>
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
+                            <Select
+                                name={field.name}
+                                value={field.value}
+                                onValueChange={field.onChange}
+                            >
+                                <SelectTrigger
+                                    aria-invalid={fieldState.invalid}
+                                    className="min-w-30"
+                                >
+                                    <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent position="popper">
+                                    <SelectGroup>
+                                        {Object.entries(columns).map(([id, title]) => (
+                                            <SelectItem key={id} value={id}>{title}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </Field>
                     )}
                 />
@@ -140,19 +179,19 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                 <PopoverTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        data-empty={!date}
+                                        data-empty={!field.value}
                                         className="justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
                                     >
-                                        {date ? format(date,"PPP") : <span>Pick a date</span>}
+                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                         <ChevronDownIcon />
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent align="end" className="w-auto p-0">
                                     <Calendar
                                         mode="single"
-                                        selected={date}
-                                        onSelect={setDate}
-                                        defaultMonth={date}
+                                        selected={field.value}
+                                        onSelect={field.onChange}
+                                        defaultMonth={field.value}
                                     />
                                 </PopoverContent>
                             </Popover>
