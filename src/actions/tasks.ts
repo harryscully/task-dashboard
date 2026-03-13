@@ -11,14 +11,15 @@ export async function updateTaskColumn(taskId:string, columnId:string) {
 }
 
 export async function createTask(data: TaskSchema) {
-    await prisma.task.create({
+    const newTask = await prisma.task.create({
         data: {
             ...data,
-            createdById: 1
+            createdById: 4
         }
     })
     revalidatePath("/tasks")
     revalidatePath("/")
+    return newTask
 }
 
 export async function updateTask(taskId:string, data: TaskSchema) {

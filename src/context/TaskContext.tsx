@@ -14,15 +14,30 @@ type TaskContextType = {
   setTasks: Dispatch<SetStateAction<Record<string, string[]>>>
   columns: Record<string, string>
   taskMap: Record<string, TaskModel>
+  addTask: (task:TaskModel) => void
 }
 
 export const TaskContext = createContext<TaskContextType | null>(null)
 
-export function TaskProvider({ children, initialTasks, initialColumns, taskMap }: TaskContextProps) {
+export function TaskProvider({ children, initialTasks, initialColumns, taskMap: initialTaskMap }: TaskContextProps) {
   const [tasks, setTasks] = useState<Record<string, string[]>>(initialTasks)
+  const [taskMap, setTaskMap] = useState<Record<string, TaskModel>>(initialTaskMap)
+
+  function addTask(task: TaskModel) {
+    setTasks(prev => (
+      {
+        ...prev,
+        [task.columnId]: [...prev[task.columnId], task.id]
+      }
+    ))
+    setTaskMap(prev => ({
+      ...prev,
+      [task.id]: task,
+    }))
+  }
 
   return (
-    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap }}>
+    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap, addTask }}>
       {children}
     </TaskContext.Provider>
   )
@@ -33,3 +48,4 @@ export function useTasks() {
   if (!context) throw new Error("useTasks must be used within a TaskProvider")
   return context
 }
+

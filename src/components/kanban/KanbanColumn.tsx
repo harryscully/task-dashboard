@@ -11,6 +11,7 @@ import TaskForm from "../forms/TaskForm"
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useTasks } from "@/context/TaskContext";
+import { useState } from "react";
 
 type KanbanColumnProps = {
     columnId: string,
@@ -21,6 +22,7 @@ type KanbanColumnProps = {
 export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnProps) {
     const { setNodeRef } = useDroppable({ id: columnId })
     const { taskMap } = useTasks()
+    const [open, setOpen] = useState(false)
 
     return (
         <Card className="flex-1 h-full min-w-50 flex flex-col">
@@ -29,7 +31,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                     <CardTitle>{title}</CardTitle>
                     <Badge variant="secondary">{tasks.length} tasks</Badge>
                 </div>
-                <Sheet>
+                <Sheet open={open} onOpenChange={setOpen}>
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <SheetTrigger asChild>
@@ -48,7 +50,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                             <SheetDescription>Add new task to {title} column</SheetDescription>
                         </SheetHeader>
 
-                        <TaskForm columnId={columnId}/>
+                        <TaskForm columnId={columnId} onSuccess={() => setOpen(false)}/>
 
                         <SheetFooter>
                             <SheetClose asChild>

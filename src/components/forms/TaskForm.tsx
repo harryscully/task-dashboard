@@ -1,38 +1,43 @@
 "use client"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { taskSchema } from "@/lib/schemas"
-import type { TaskSchema } from "@/lib/schemas"
+import { taskSchema, type TaskSchema } from "@/lib/schemas"
 import { createTask } from "@/actions/tasks"
 import { Field, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/field"
-import { Textarea } from "../ui/textarea"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
-import { useState } from "react"
 import { format } from "date-fns"
 import { useTasks } from "@/context/TaskContext"
 
-export default function TaskForm({ columnId }: { columnId: string }) {
+export default function TaskForm({ columnId, onSuccess }: { columnId: string, onSuccess: () => void }) {
     const form = useForm<TaskSchema>({
         resolver: zodResolver(taskSchema),
         defaultValues: {
+            title: "",
+            description: "",
             columnId: columnId
         }
     })
+    const router = useRouter()
 
-    function onSubmit(data: TaskSchema) {
-        createTask(data)
+    const { columns, addTask } = useTasks()
+    
+    async function onSubmit(data: TaskSchema) {
+        const newTask = await createTask(data)
+        addTask(newTask)
+        router.refresh()
+        onSuccess()
     }
-
-    const { columns } = useTasks()
 
     return (
         <form
-            className="px-4"
+            className="px-4 h-full flex flex-col justify-between"
             onSubmit={form.handleSubmit(onSubmit)}
         >
             <FieldGroup>
@@ -96,10 +101,7 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                 Status
                                 <span className="text-destructive">*</span>
                             </FieldLabel>
-                            {fieldState.invalid && (
-                                <FieldError
-                                    errors={[fieldState.error]}
-                                />)}
+                           
                             <Select
                                 name={field.name}
                                 value={field.value}
@@ -119,6 +121,11 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+
+                             {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
                         </Field>
                     )}
                 />
@@ -133,10 +140,7 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                 Priority
                                 <span className="text-destructive">*</span>
                             </FieldLabel>
-                            {fieldState.invalid && (
-                                <FieldError
-                                    errors={[fieldState.error]}
-                                />)}
+                            
                             <Select
                                 name={field.name}
                                 value={field.value}
@@ -157,6 +161,11 @@ export default function TaskForm({ columnId }: { columnId: string }) {
 
                                 </SelectContent>
                             </Select>
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
                         </Field>
                     )}
                 />
@@ -171,10 +180,7 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                 Due Date
                                 <span className="text-muted-foreground text-xs">Optional field</span>
                             </FieldLabel>
-                            {fieldState.invalid && (
-                                <FieldError
-                                    errors={[fieldState.error]}
-                                />)}
+                            
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -195,11 +201,20 @@ export default function TaskForm({ columnId }: { columnId: string }) {
                                     />
                                 </PopoverContent>
                             </Popover>
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
                         </Field>
                     )}
                 />
             </FieldGroup>
-
+            <Field>
+                <Button type="submit">
+                    Submit
+                </Button>
+            </Field>
         </form>
     )
 }
