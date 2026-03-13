@@ -22,7 +22,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                 <CardTitle>{title}</CardTitle>
                 <Badge variant="secondary">{tasks.length} tasks</Badge>
             </CardHeader>
-            <CardContent className="flex-1 overflow-hidden">
+            <CardContent className="flex-1 overflow-auto">
                 <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
                     <div ref={setNodeRef} className="flex flex-col gap-4 p-px min-h-16 h-full">
                         {tasks.map((taskId) => {
