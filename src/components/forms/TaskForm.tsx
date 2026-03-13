@@ -8,6 +8,12 @@ import { Field, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/fiel
 import { Textarea } from "../ui/textarea"
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { ChevronDownIcon } from "lucide-react"
+import { useState } from "react"
+import { format } from "date-fns"
 
 export default function TaskForm({ columnId }: { columnId: string }) {
     const form = useForm<TaskSchema>({
@@ -20,7 +26,8 @@ export default function TaskForm({ columnId }: { columnId: string }) {
     function onSubmit(data: TaskSchema) {
         createTask(data)
     }
-
+    
+    const [date,setDate] = useState<Date>()
     return (
         <form
             className="px-4"
@@ -111,6 +118,44 @@ export default function TaskForm({ columnId }: { columnId: string }) {
 
                                 </SelectContent>
                             </Select>
+                        </Field>
+                    )}
+                />
+
+                {/* DUE DATE */}
+                <Controller
+                    name="dueDate"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel className="flex justify-between">
+                                Due Date
+                                <span className="text-muted-foreground text-xs">Optional field</span>
+                            </FieldLabel>
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        data-empty={!date}
+                                        className="justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+                                    >
+                                        {date ? format(date,"PPP") : <span>Pick a date</span>}
+                                        <ChevronDownIcon />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent align="end" className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        defaultMonth={date}
+                                    />
+                                </PopoverContent>
+                            </Popover>
                         </Field>
                     )}
                 />
