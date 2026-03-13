@@ -31,3 +31,5 @@ export default async function Home() {
     </TaskProvider>
   );
 }
+
+export const dynamic = 'force-dynamic'

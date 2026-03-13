@@ -38,3 +38,5 @@ export default async function Tasks() {
     </TaskProvider>
   );
 }
+
+export const dynamic = 'force-dynamic'
