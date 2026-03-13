@@ -16,6 +16,7 @@ import confetti from "canvas-confetti";
 import { useState, useEffect } from "react";
 import KanbanCard from "./KanbanCard";
 import type { TaskModel } from "../../../generated/prisma/models/Task";
+import { updateTaskColumn } from "@/actions/tasks";
 
 export default function KanbanBoard() {
     const { tasks, setTasks, columns, taskMap } = useTasks()
@@ -55,6 +56,10 @@ export default function KanbanBoard() {
             [activeCol]: prev[activeCol].filter(id => id !== activeId),
             [overCol]: [...prev[overCol], activeId]
         }))
+
+        if (activeCol !== overCol) {
+            updateTaskColumn(activeId, overCol)
+        }
     }
 
     function onDragEnd(event: DragEndEvent) {
@@ -92,7 +97,7 @@ export default function KanbanBoard() {
     useEffect(() => setMounted(true), [])
 
     if (!mounted) return null
-    
+
     return (
         <DndContext
             sensors={sensors}
