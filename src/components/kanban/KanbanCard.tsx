@@ -25,14 +25,14 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
 
     const { resolvedTheme } = useTheme()
     const priorityVariant = resolvedTheme === "dark" ? priorityVariantDark : priorityVariantLight
-    
+
     return (
         <Card
             ref={setNodeRef}
             {...attributes}
             {...listeners}
             style={{ transform: CSS.Transform.toString(transform), transition }}
-            className={`bg-accent min-h-22 cursor-grab ${isDragging ? 'opacity-50' : ''}`}
+            className={`bg-accent shrink-0 cursor-grab ${isDragging ? 'opacity-50' : ''}`}
         >
             <CardHeader>
                 <CardTitle>{task.title}</CardTitle>

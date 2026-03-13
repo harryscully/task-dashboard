@@ -25,7 +25,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
     const [open, setOpen] = useState(false)
 
     return (
-        <Card className="flex-1 h-full min-w-50 flex flex-col">
+        <Card className="flex-1 h-full min-w-55 flex flex-col">
             <CardHeader className="flex justify-between shrink-0 items-center">
                 <div className="flex gap-2 items-center">
                     <CardTitle>{title}</CardTitle>
