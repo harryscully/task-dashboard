@@ -2,8 +2,10 @@
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { Plus } from "lucide-react"
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card"
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+
+import { Plus } from "lucide-react"
 import KanbanCard from "./KanbanCard";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -26,17 +28,31 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                     <CardTitle>{title}</CardTitle>
                     <Badge variant="secondary">{tasks.length} tasks</Badge>
                 </div>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Plus />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Add new task</p>
-                    </TooltipContent>
-                </Tooltip>
-
+                <Sheet>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <Plus />
+                                </Button>
+                            </SheetTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Add new task</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <SheetContent>
+                        <SheetHeader>
+                            <SheetTitle>New Task</SheetTitle>
+                            <SheetDescription>Add new task to {title} column</SheetDescription>
+                        </SheetHeader>
+                        <SheetFooter>
+                            <SheetClose asChild>
+                                <Button variant="outline">Close</Button>
+                            </SheetClose>
+                        </SheetFooter>
+                    </SheetContent>
+                </Sheet>
             </CardHeader>
             <CardContent className="flex-1 overflow-auto">
                 <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
