@@ -1,5 +1,4 @@
 "use client"
-import { columns } from "@/data/tasks";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
@@ -14,11 +13,11 @@ const chartConfig = {
 
 export default function ChartBar() {
 
-    const { tasks } = useTasks()
+    const { tasks, columns } = useTasks()
 
-    const chartData = columns.map(column => ({
-        column: column.title,
-        count: tasks[column.id].length
+    const chartData = Object.entries(columns).map(([id, title]) => ({
+        column: title,
+        count: tasks[id]?.length ?? 0
     }))
 
     return (

@@ -13,7 +13,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { useTasks } from "@/context/TaskContext";
 import confetti from "canvas-confetti";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KanbanCard from "./KanbanCard";
 import type { TaskModel } from "../../../generated/prisma/models/Task";
 
@@ -88,6 +88,11 @@ export default function KanbanBoard() {
         }
     }
 
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => setMounted(true), [])
+
+    if (!mounted) return null
+    
     return (
         <DndContext
             sensors={sensors}

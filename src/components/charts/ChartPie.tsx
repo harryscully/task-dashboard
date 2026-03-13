@@ -1,36 +1,41 @@
 "use client"
-import { initialTasks } from "@/data/tasks";
 import { Label, Pie, PieChart } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-
-const chartData = (["high", "medium", "low"]).map(priority => ({
-    priority,
-    count: initialTasks.filter(t => t.priority === priority).length,
-    fill: `var(--color-${priority})`
-}))
-
-const totalTasks = initialTasks.length
+import { useTasks } from "@/context/TaskContext";
 
 const chartConfig = {
     count: {
         label: "Count"
     },
-    high: {
+    HIGH: {
         label: "High",
         color: "var(--chart-1)",
     },
-    medium: {
+    MEDIUM: {
         label: "Medium",
         color: "var(--chart-2)",
     },
-    low: {
+    LOW: {
         label: "Low",
         color: "var(--chart-3)",
     }
 } satisfies ChartConfig
 
 export default function ChartPie() {
+
+    const { tasks, taskMap } = useTasks()
+    
+    const allTasks = Object.values(taskMap)
+    const totalTasks = allTasks.length
+
+    const chartData = (["HIGH", "MEDIUM", "LOW"]).map(priority => ({
+        priority,
+        count: allTasks.filter(t => t.priority === priority).length,
+        fill: `var(--color-${priority})`
+    }))
+
+
     return (
         <Card className="flex flex-col w-full sm:w-96">
             <CardHeader>

@@ -1,12 +1,33 @@
-"use client"
-import ChartPie from "@/components/charts/ChartPie";
-import ChartBar from "@/components/charts/ChartBar";
+import ChartGrid from "@/components/charts/ChartGrid";
+import { TaskProvider } from "@/context/TaskContext";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+
+  const tasksData = await prisma.task.findMany()
+  const columnsData = await prisma.column.findMany({orderBy: {order: "asc"}})
+
+  const initialTasks: Record<string, string[]> = {}
+  for (const column of columnsData) {
+    initialTasks[column.id.toString()] = []
+  }
+  for (const task of tasksData) {
+    initialTasks[task.columnId.toString()].push(task.id)
+  }
+
+  const initialColumns: Record<string, string> = {}
+  for (const column of columnsData) {
+    initialColumns[column.id] = column.title
+  }
+
+  const taskMap: Record<string, typeof tasksData[0]> = {}
+  for (const task of tasksData) {
+    taskMap[task.id] = task
+  }
+
   return (
-    <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <ChartPie />
-      <ChartBar />
-    </div>
+    <TaskProvider initialTasks={initialTasks} initialColumns={initialColumns} taskMap={taskMap}>
+      <ChartGrid />
+    </TaskProvider>
   );
 }
