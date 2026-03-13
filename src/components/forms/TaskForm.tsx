@@ -27,7 +27,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
     const router = useRouter()
 
     const { columns, addTask } = useTasks()
-    
+
     async function onSubmit(data: TaskSchema) {
         const newTask = await createTask(data)
         addTask(newTask)
@@ -37,7 +37,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
 
     return (
         <form
-            className="px-4 h-full flex flex-col justify-between"
+            className="px-4 pb-4 h-full flex flex-col justify-between"
             onSubmit={form.handleSubmit(onSubmit)}
         >
             <FieldGroup>
@@ -101,7 +101,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
                                 Status
                                 <span className="text-destructive">*</span>
                             </FieldLabel>
-                           
+
                             <Select
                                 name={field.name}
                                 value={field.value}
@@ -122,7 +122,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
                                 </SelectContent>
                             </Select>
 
-                             {fieldState.invalid && (
+                            {fieldState.invalid && (
                                 <FieldError
                                     errors={[fieldState.error]}
                                 />)}
@@ -140,7 +140,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
                                 Priority
                                 <span className="text-destructive">*</span>
                             </FieldLabel>
-                            
+
                             <Select
                                 name={field.name}
                                 value={field.value}
@@ -180,7 +180,7 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
                                 Due Date
                                 <span className="text-muted-foreground text-xs">Optional field</span>
                             </FieldLabel>
-                            
+
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -213,6 +213,9 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
             <Field>
                 <Button type="submit">
                     Submit
+                </Button>
+                <Button type="button" variant="outline" onClick={onSuccess}>
+                    Close
                 </Button>
             </Field>
         </form>

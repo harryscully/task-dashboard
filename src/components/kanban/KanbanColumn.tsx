@@ -51,12 +51,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                         </SheetHeader>
 
                         <TaskForm columnId={columnId} onSuccess={() => setOpen(false)}/>
-
-                        <SheetFooter>
-                            <SheetClose asChild>
-                                <Button variant="outline">Close</Button>
-                            </SheetClose>
-                        </SheetFooter>
+                            
                     </SheetContent>
                 </Sheet>
             </CardHeader>
