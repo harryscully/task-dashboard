@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,12 +27,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="shrink-0 border-b px-2 sm:p-6 py-2">
-            <Navbar />
-          </div>
-          <main className="flex-1 p-4 sm:p-8 overflow-auto">
+          <TooltipProvider delayDuration={500}>
+            <div className="shrink-0 border-b px-2 sm:p-6 py-2">
+              <Navbar />
+            </div>
+            <main className="flex-1 p-4 sm:p-8 overflow-auto">
               {children}
-          </main>
+            </main>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
