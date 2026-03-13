@@ -51,11 +51,11 @@ export async function updateTask(taskId:string, data: TaskFormData) {
 }
 
 export async function deleteTask(taskId:string) {
-    await prisma.task.delete({
-        where: { id: taskId }
-    })
     await prisma.taskAssignee.deleteMany({
         where: { taskId }
+    })
+    await prisma.task.delete({
+        where: { id: taskId }
     })
     revalidatePath("/tasks")
     revalidatePath("/")
