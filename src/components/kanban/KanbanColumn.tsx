@@ -7,6 +7,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 
 import { Plus } from "lucide-react"
 import KanbanCard from "./KanbanCard";
+import TaskForm from "../forms/TaskForm"
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useTasks } from "@/context/TaskContext";
@@ -46,6 +47,9 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                             <SheetTitle>New Task</SheetTitle>
                             <SheetDescription>Add new task to {title} column</SheetDescription>
                         </SheetHeader>
+
+                        <TaskForm columnId={columnId}/>
+
                         <SheetFooter>
                             <SheetClose asChild>
                                 <Button variant="outline">Close</Button>
