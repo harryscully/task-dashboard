@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTasks } from "@/context/TaskContext";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Trash2Icon } from "lucide-react"
+import TaskForm from "../forms/TaskForm";
 
 type TaskDetailSheet = {
     task: TaskModel
@@ -15,6 +16,7 @@ type TaskDetailSheet = {
 
 export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
     const [open, setOpen] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
     const { columns, removeTask } = useTasks()
     const router = useRouter()
 
@@ -42,7 +44,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                     <SheetDescription>Details for {task.title}</SheetDescription>
                 </SheetHeader>
 
-                <div className="px-4">
+                {!isEditing ? (<div className="px-4">
                     <p className="mb-2 text-xs text-muted-foreground uppercase font-semibold">Title</p>
                     <p>{task.title}</p>
 
@@ -71,10 +73,14 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                             </p>
                         </>
                     )}
+                </div>) : <TaskForm columnId={task.columnId} task={task} onSuccess={()=>setIsEditing(false)} />}
 
-                </div>
+                {!isEditing && <SheetFooter>
+                    <Button onClick={() => setIsEditing(prev => !prev)}>
+                        Edit Task
+                    </Button>
 
-                <SheetFooter>
+
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="destructive">
@@ -106,7 +112,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                         </Button>
                     </SheetClose>
                 </SheetFooter>
-
+                }
             </SheetContent>
         </Sheet>
     )

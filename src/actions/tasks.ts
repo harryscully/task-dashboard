@@ -23,15 +23,15 @@ export async function createTask(data: TaskSchema) {
 }
 
 export async function updateTask(taskId:string, data: TaskSchema) {
-    await prisma.task.update({
+    const updatedTask = await prisma.task.update({
         where: { id: taskId },
         data: {
-            ...data,
-            createdById: 1
+            ...data
         }
     })
     revalidatePath("/tasks")
     revalidatePath("/")
+    return updatedTask
 }
 
 export async function deleteTask(taskId:string) {

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { taskSchema, type TaskSchema } from "@/lib/schemas"
-import { createTask } from "@/actions/tasks"
+import { createTask, updateTask } from "@/actions/tasks"
 import { Field, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/field"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -14,11 +14,18 @@ import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
 import { format } from "date-fns"
 import { useTasks } from "@/context/TaskContext"
+import { TaskModel } from "../../../generated/prisma/models"
 
-export default function TaskForm({ columnId, onSuccess }: { columnId: string, onSuccess: () => void }) {
+export default function TaskForm({ columnId, task, onSuccess }: { columnId: string, task?: TaskModel, onSuccess: () => void }) {
     const form = useForm<TaskSchema>({
         resolver: zodResolver(taskSchema),
-        defaultValues: {
+        defaultValues: task ? {
+            title: task.title,
+            description: task.description ?? "",
+            columnId: task.columnId,
+            priority: task.priority,
+            dueDate: task.dueDate ?? undefined
+        } : {
             title: "",
             description: "",
             columnId: columnId
@@ -26,11 +33,17 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
     })
     const router = useRouter()
 
-    const { columns, addTask } = useTasks()
+    const { columns, addTask, editTask } = useTasks()
 
     async function onSubmit(data: TaskSchema) {
-        const newTask = await createTask(data)
-        addTask(newTask)
+        if (task) {
+            const newTask = await updateTask(task.id, data)
+            editTask(newTask)
+        } else {
+            const newTask = await createTask(data)
+            addTask(newTask)
+        }
+
         router.refresh()
         onSuccess()
     }
@@ -212,10 +225,10 @@ export default function TaskForm({ columnId, onSuccess }: { columnId: string, on
             </FieldGroup>
             <Field>
                 <Button type="submit">
-                    Submit
+                    {task ? "Edit" : "Submit"}
                 </Button>
                 <Button type="button" variant="outline" onClick={onSuccess}>
-                    Close
+                    {task ? "Cancel" : "Close"}
                 </Button>
             </Field>
         </form>
