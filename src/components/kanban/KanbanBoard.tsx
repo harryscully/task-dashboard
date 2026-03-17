@@ -19,7 +19,7 @@ import type { TaskModel } from "../../../generated/prisma/models/Task";
 import { updateTaskColumn } from "@/actions/tasks";
 
 export default function KanbanBoard() {
-    const { tasks, setTasks, columns, taskMap } = useTasks()
+    const { tasks, setTasks, columns, taskMap, setTaskMap } = useTasks()
     const [activeTask, setActiveTask] = useState<TaskModel | null>(null)
     const [sourceCol, setSourceCol] = useState<string | null>(null)
 
@@ -38,7 +38,7 @@ export default function KanbanBoard() {
         setSourceCol(findColumn(id) ?? null)
     }
 
-    async function onDragOver(event: DragOverEvent) {
+    function onDragOver(event: DragOverEvent) {
         const { active, over } = event
         if (!over) return
 
@@ -56,13 +56,13 @@ export default function KanbanBoard() {
             [activeCol]: prev[activeCol].filter(id => id !== activeId),
             [overCol]: [...prev[overCol], activeId]
         }))
-
-        if (activeCol !== overCol) {
-            await updateTaskColumn(activeId, overCol)
-        }
+        setTaskMap(prev => ({
+            ...prev,
+            [activeId]: { ...prev[activeId], columnId: overCol }
+        }))
     }
 
-    function onDragEnd(event: DragEndEvent) {
+    async function onDragEnd(event: DragEndEvent) {
         const { active, over } = event
         setActiveTask(null)
         if (!over) return
@@ -77,7 +77,7 @@ export default function KanbanBoard() {
 
         // confetti if dropped into Done
         const doneColId = Object.entries(columns).find(([_, t]) => t === "Done")?.[0]
-        
+
         if (overCol === doneColId && sourceCol !== doneColId) {
             confetti({ angle: 270, particleCount: 200, spread: 80, origin: { y: -0.3 } })
         }
@@ -90,6 +90,14 @@ export default function KanbanBoard() {
                 if (oldIndex === newIndex) return prev
                 return { ...prev, [activeCol]: arrayMove(prev[activeCol], oldIndex, newIndex) }
             })
+            setTaskMap(prev => ({
+                ...prev,
+                [activeId]: { ...prev[activeId], columnId: overCol }
+            }))
+        }
+
+        if (activeCol !== overCol) {
+            await updateTaskColumn(activeId, overCol)
         }
     }
 

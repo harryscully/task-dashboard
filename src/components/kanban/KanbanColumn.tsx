@@ -39,7 +39,7 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                             const task = taskMap[taskId]
                             if (!task) return null
                             return (
-                                <KanbanCard task={task} />
+                                <KanbanCard key={taskId} task={task} />
                             )
                         })}
                     </div>
