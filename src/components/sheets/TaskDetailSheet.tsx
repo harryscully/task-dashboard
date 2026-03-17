@@ -43,7 +43,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                                 Delete Task
                             </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent  size="sm">
+                        <AlertDialogContent size="sm">
                             <AlertDialogHeader>
                                 <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
                                     <Trash2Icon />
@@ -55,7 +55,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
-                                <AlertDialogAction variant="destructive" onClick={()=>onDelete()}>Delete</AlertDialogAction>
+                                <AlertDialogAction variant="destructive" onClick={() => onDelete()}>Delete</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
