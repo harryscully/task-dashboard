@@ -14,7 +14,8 @@ type TaskContextType = {
   setTasks: Dispatch<SetStateAction<Record<string, string[]>>>
   columns: Record<string, string>
   taskMap: Record<string, TaskModel>
-  addTask: (task:TaskModel) => void
+  addTask: (task:TaskModel) => void,
+  removeTask: (task:TaskModel) => void
 }
 
 export const TaskContext = createContext<TaskContextType | null>(null)
@@ -36,8 +37,22 @@ export function TaskProvider({ children, initialTasks, initialColumns, taskMap: 
     }))
   }
 
+  function removeTask(task: TaskModel) {
+    setTasks(prev => (
+      {
+        ...prev,
+        [task.columnId]: prev[task.columnId].filter(id => id !== task.id)
+      }
+    ))
+    setTaskMap(prev => {
+      const newMap = {...prev}
+      delete newMap[task.id]
+      return newMap
+    })
+  }
+
   return (
-    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap, addTask }}>
+    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap, addTask, removeTask }}>
       {children}
     </TaskContext.Provider>
   )

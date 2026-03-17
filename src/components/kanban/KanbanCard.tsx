@@ -35,7 +35,7 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                 {...attributes}
                 {...listeners}
                 style={{ transform: CSS.Transform.toString(transform), transition }}
-                className={`bg-accent shrink-0 cursor-grab ${isDragging ? 'opacity-50' : ''}`}
+                className={`bg-accent shrink-0 cursor-pointer ${isDragging ? 'opacity-50' : ''}`}
             >
                 <CardHeader>
                     <CardTitle>{task.title}</CardTitle>
