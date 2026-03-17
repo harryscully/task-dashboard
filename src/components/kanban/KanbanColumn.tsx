@@ -18,7 +18,7 @@ type KanbanColumnProps = {
 export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnProps) {
     const { setNodeRef } = useDroppable({ id: columnId })
     const { taskMap } = useTasks()
-    
+
     return (
         <Card className="flex-1 h-full min-w-55 flex flex-col">
             <CardHeader className="flex justify-between shrink-0 items-center">
@@ -38,7 +38,9 @@ export default function KanbanColumn({ columnId, title, tasks }: KanbanColumnPro
                         {tasks.map((taskId) => {
                             const task = taskMap[taskId]
                             if (!task) return null
-                            return <KanbanCard key={taskId} task={task} />
+                            return (
+                                <KanbanCard task={task} />
+                            )
                         })}
                     </div>
                 </SortableContext>
