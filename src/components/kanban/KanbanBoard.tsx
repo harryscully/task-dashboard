@@ -96,7 +96,7 @@ export default function KanbanBoard() {
             }))
         }
 
-        if (activeCol !== overCol) {
+        if (sourceCol !== overCol) {
             await updateTaskColumn(activeId, overCol)
         }
     }
