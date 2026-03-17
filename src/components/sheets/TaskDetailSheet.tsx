@@ -15,7 +15,7 @@ type TaskDetailSheet = {
 
 export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
     const [open, setOpen] = useState(false)
-    const { removeTask } = useTasks()
+    const { columns, removeTask } = useTasks()
     const router = useRouter()
 
     async function onDelete() {
@@ -23,6 +23,12 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
         removeTask(task)
         router.refresh()
         setOpen(false)
+    }
+
+    const priorityLookup = {
+        HIGH: "High",
+        MEDIUM: "Medium",
+        LOW: "Low"
     }
 
     return (
@@ -35,6 +41,38 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                     <SheetTitle>Task Details</SheetTitle>
                     <SheetDescription>Details for {task.title}</SheetDescription>
                 </SheetHeader>
+
+                <div className="px-4">
+                    <p className="mb-2 text-xs text-muted-foreground uppercase font-semibold">Title</p>
+                    <p>{task.title}</p>
+
+                    {task.description && (
+                        <>
+                            <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Description</p>
+                            <p>{task.description}</p>
+                        </>
+                    )}
+
+                    <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Status</p>
+                    <p>{columns[task.columnId]}</p>
+
+                    <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Priority</p>
+                    <p>{priorityLookup[task.priority]}</p>
+
+                    {task.dueDate && (
+                        <>
+                            <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Due Date</p>
+                            <p>
+                                {task.dueDate.toLocaleDateString("en-uk", {
+                                    month: "long",
+                                    day: "numeric",
+                                    year: "numeric"
+                                })}
+                            </p>
+                        </>
+                    )}
+
+                </div>
 
                 <SheetFooter>
                     <AlertDialog>
