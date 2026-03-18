@@ -1,7 +1,8 @@
 "use client"
 import TaskDetailSheet from "../sheets/TaskDetailSheet";
 import { Badge } from "../ui/badge";
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "../ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card";
+import { Avatar, AvatarGroup, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { TaskModel } from "../../../generated/prisma/models/Task"
@@ -63,7 +64,17 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                     {task.description && <CardDescription>{task.description}</CardDescription>}
                 </CardHeader>
 
-                <CardFooter>
+                <CardFooter className="justify-end">
+                    <AvatarGroup>
+                        <Avatar>
+                            <AvatarImage className="grayscale" src="/phineas.png" />
+                            <AvatarFallback>PF</AvatarFallback>
+                        </Avatar>
+                        <Avatar>
+                            <AvatarImage className="grayscale" src="/heinz.png" />
+                            <AvatarFallback>HD</AvatarFallback>
+                        </Avatar>
+                    </AvatarGroup>
 
                 </CardFooter>
             </Card>
