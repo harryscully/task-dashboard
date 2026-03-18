@@ -6,12 +6,19 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { TaskModel } from "../../../generated/prisma/models/Task"
 import { useTheme } from "next-themes";
+import { FlagIcon } from "lucide-react";
+
+const priorityLabel = {
+    "HIGH": "High",
+    "MEDIUM": "Medium",
+    "LOW": "Low"
+}
+
 const priorityVariantDark: Record<TaskModel["priority"], string> = {
     "HIGH": "bg-red-950 text-red-300",
     "MEDIUM": "bg-blue-950 text-blue-300",
     "LOW": "bg-green-950 text-green-300"
 }
-import { CalendarIcon } from "lucide-react";
 
 const priorityVariantLight: Record<TaskModel["priority"], string> = {
     "HIGH": "bg-red-300 text-red-950",
@@ -38,20 +45,26 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                 className={`bg-accent shrink-0 cursor-pointer ${isDragging ? 'opacity-50' : ''}`}
             >
                 <CardHeader>
-                    <CardTitle>{task.title}</CardTitle>
+                    <div className=" flex gap-2">
+                        <Badge className={priorityVariant[task.priority]}>
+                            {priorityLabel[task.priority]}
+                        </Badge>
+
+                        {task.dueDate && (
+                            <Badge variant="outline">
+                                <FlagIcon data-icon="inline-start" />
+                                {task.dueDate.toLocaleDateString("en-uk", {
+                                    month: "short",
+                                    day: "numeric"
+                                })}
+                            </Badge>)}
+                    </div>
+                    <CardTitle className="mt-2">{task.title}</CardTitle>
                     {task.description && <CardDescription>{task.description}</CardDescription>}
                 </CardHeader>
-                {task.dueDate && (<CardContent>
-                    <p className="flex gap-1 text-muted-foreground"><CalendarIcon size={16} />{task.dueDate.toLocaleDateString("en-uk", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric"
-                    })}</p>
-                </CardContent>)}
+
                 <CardFooter>
-                    <Badge className={`uppercase ${priorityVariant[task.priority]}`}>
-                        {task.priority}
-                    </Badge>
+
                 </CardFooter>
             </Card>
         </TaskDetailSheet>
