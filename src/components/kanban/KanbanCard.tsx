@@ -74,7 +74,7 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                                 taskAssignees[task.id].map(user => (
                                     <Tooltip key={userMap[Number(user)].id}>
                                         <TooltipTrigger>
-                                            <Avatar>
+                                            <Avatar className="outline-2 outline-white">
                                                 <AvatarImage className="grayscale" src={`${userMap[Number(user)].firstName.toLowerCase()}.png`} />
                                                 <AvatarFallback>
                                                     {userMap[Number(user)].firstName.charAt(0)}{userMap[Number(user)].lastName.charAt(0)}
