@@ -6,6 +6,7 @@ import { taskSchema, type TaskSchema } from "@/lib/schemas"
 import { createTask, updateTask } from "@/actions/tasks"
 import { Field, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/field"
 import { Textarea } from "@/components/ui/textarea"
+import { Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList, ComboboxValue, useComboboxAnchor } from "../ui/combobox"
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Calendar } from "@/components/ui/calendar"
@@ -15,8 +16,11 @@ import { ChevronDownIcon } from "lucide-react"
 import { format } from "date-fns"
 import { useTasks } from "@/context/TaskContext"
 import { TaskModel } from "../../../generated/prisma/models"
+import { useState } from "react"
 
 export default function TaskForm({ columnId, task, onSuccess }: { columnId: string, task?: TaskModel, onSuccess: () => void }) {
+    const { columns, addTask, editTask, userMap, taskAssignees } = useTasks()
+    const [value, setValue] = useState<string[]>([])
     const form = useForm<TaskSchema>({
         resolver: zodResolver(taskSchema),
         defaultValues: task ? {
@@ -24,16 +28,17 @@ export default function TaskForm({ columnId, task, onSuccess }: { columnId: stri
             description: task.description ?? "",
             columnId: task.columnId,
             priority: task.priority,
-            dueDate: task.dueDate ?? undefined
+            dueDate: task.dueDate ?? undefined,
+
         } : {
             title: "",
             description: "",
-            columnId: columnId
+            columnId: columnId,
+
         }
     })
     const router = useRouter()
 
-    const { columns, addTask, editTask } = useTasks()
 
     async function onSubmit(data: TaskSchema) {
         if (task) {
@@ -47,6 +52,9 @@ export default function TaskForm({ columnId, task, onSuccess }: { columnId: stri
         router.refresh()
         onSuccess()
     }
+
+    const users = Object.values(userMap)
+    const anchor = useComboboxAnchor()
 
     return (
         <form
@@ -214,6 +222,51 @@ export default function TaskForm({ columnId, task, onSuccess }: { columnId: stri
                                     />
                                 </PopoverContent>
                             </Popover>
+
+                            {fieldState.invalid && (
+                                <FieldError
+                                    errors={[fieldState.error]}
+                                />)}
+                        </Field>
+                    )}
+                />
+
+                {/* ASSIGNED */}
+                <Controller
+                    name="assignees"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                            <FieldLabel className="gap-1">
+                                Assigned User(s)
+                            </FieldLabel>
+
+                            <Combobox
+                                items={users}
+                                multiple
+                                value={users.filter(user => field.value?.includes(user.id))}
+                                onValueChange={(selected) => field.onChange(selected.map(u => u.id))}
+                                itemToStringValue={(user) => `${user.firstName} ${user.lastName}`}
+                            >
+                                <ComboboxChips ref={anchor} className="w-full">
+                                    <ComboboxValue>
+                                        {field.value?.map((id) => (
+                                            <ComboboxChip key={id}>{userMap[id]?.firstName}</ComboboxChip>
+                                        ))}
+                                    </ComboboxValue>
+                                    <ComboboxChipsInput placeholder={field.value?.length ? "" : "Select user(s)"} />
+                                </ComboboxChips>
+                                <ComboboxContent anchor={anchor}>
+                                    <ComboboxEmpty>No users found.</ComboboxEmpty>
+                                    <ComboboxList>
+                                        {(user) => (
+                                            <ComboboxItem key={user.id} value={user}>
+                                                {user.firstName} {user.lastName}
+                                            </ComboboxItem>
+                                        )}
+                                    </ComboboxList>
+                                </ComboboxContent>
+                            </Combobox>
 
                             {fieldState.invalid && (
                                 <FieldError

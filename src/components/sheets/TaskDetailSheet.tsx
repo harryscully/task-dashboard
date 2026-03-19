@@ -34,7 +34,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
     }
 
     return (
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={setOpen} modal={false}>
             <SheetTrigger asChild>
                 {children}
             </SheetTrigger>

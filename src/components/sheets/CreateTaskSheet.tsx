@@ -13,7 +13,7 @@ export default function CreateTaskSheet({ columnId, columnTitle, children }: Cre
     const [open, setOpen] = useState(false)
 
     return (
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={setOpen} modal={false}>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <SheetTrigger asChild>
