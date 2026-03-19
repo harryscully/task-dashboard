@@ -17,7 +17,7 @@ type TaskDetailSheet = {
 export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
     const [open, setOpen] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
-    const { columns, removeTask } = useTasks()
+    const { columns, removeTask, userMap, taskAssignees } = useTasks()
     const router = useRouter()
 
     async function onDelete() {
@@ -73,7 +73,19 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                             </p>
                         </>
                     )}
-                </div>) : <TaskForm columnId={task.columnId} task={task} onSuccess={()=>setIsEditing(false)} />}
+
+                    {taskAssignees[task.id].length > 0 && (
+                        <>
+                            <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Assigned To</p>
+                            <p>
+                                {taskAssignees[task.id]
+                                    .map(user => `${userMap[Number(user)].firstName} ${userMap[Number(user)].lastName}`)
+                                    .join(", ")}
+                            </p>
+                        </>
+                    )}
+
+                </div>) : <TaskForm columnId={task.columnId} task={task} onSuccess={() => setIsEditing(false)} />}
 
                 {!isEditing && <SheetFooter>
                     <Button onClick={() => setIsEditing(prev => !prev)}>
