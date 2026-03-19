@@ -20,7 +20,7 @@ import { useState } from "react"
 
 export default function TaskForm({ columnId, task, onSuccess }: { columnId: string, task?: TaskModel, onSuccess: () => void }) {
     const { columns, addTask, editTask, userMap, taskAssignees } = useTasks()
-    const [value, setValue] = useState<string[]>([])
+    
     const form = useForm<TaskSchema>({
         resolver: zodResolver(taskSchema),
         defaultValues: task ? {
@@ -29,12 +29,12 @@ export default function TaskForm({ columnId, task, onSuccess }: { columnId: stri
             columnId: task.columnId,
             priority: task.priority,
             dueDate: task.dueDate ?? undefined,
-
+            assignees: taskAssignees[task.id] ?? []
         } : {
             title: "",
             description: "",
             columnId: columnId,
-
+            assignees: []
         }
     })
     const router = useRouter()
