@@ -1,12 +1,15 @@
 "use client"
 import { createContext, useContext, useState, Dispatch, SetStateAction } from "react"
 import type { TaskModel } from "../../generated/prisma/models/Task"
+import type { UserModel } from "../../generated/prisma/models/User"
 
 type TaskContextProps = {
   children: React.ReactNode
   initialTasks: Record<string, string[]>
   initialColumns: Record<string, string>
   taskMap: Record<string, TaskModel>
+  taskAssignees: Record<string, number[]>
+  userMap: Record<number, UserModel>
 }
 
 type TaskContextType = {
@@ -14,6 +17,8 @@ type TaskContextType = {
   setTasks: Dispatch<SetStateAction<Record<string, string[]>>>
   columns: Record<string, string>
   taskMap: Record<string, TaskModel>
+  taskAssignees: Record<string, number[]>
+  userMap: Record<number, UserModel>
   setTaskMap: Dispatch<SetStateAction<Record<string, TaskModel>>>
   addTask: (task:TaskModel) => void,
   removeTask: (task:TaskModel) => void
@@ -22,7 +27,7 @@ type TaskContextType = {
 
 export const TaskContext = createContext<TaskContextType | null>(null)
 
-export function TaskProvider({ children, initialTasks, initialColumns, taskMap: initialTaskMap }: TaskContextProps) {
+export function TaskProvider({ children, initialTasks, initialColumns, taskMap: initialTaskMap, taskAssignees, userMap }: TaskContextProps) {
   const [tasks, setTasks] = useState<Record<string, string[]>>(initialTasks)
   const [taskMap, setTaskMap] = useState<Record<string, TaskModel>>(initialTaskMap)
 
@@ -70,7 +75,7 @@ export function TaskProvider({ children, initialTasks, initialColumns, taskMap: 
   }
 
   return (
-    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap, setTaskMap, addTask, removeTask, editTask }}>
+    <TaskContext.Provider value={{ tasks, setTasks, columns: initialColumns, taskMap, setTaskMap, addTask, removeTask, editTask, userMap, taskAssignees }}>
       {children}
     </TaskContext.Provider>
   )

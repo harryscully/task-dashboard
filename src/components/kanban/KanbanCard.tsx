@@ -3,10 +3,12 @@ import TaskDetailSheet from "../sheets/TaskDetailSheet";
 import { Badge } from "../ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card";
 import { Avatar, AvatarGroup, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { TaskModel } from "../../../generated/prisma/models/Task"
 import { useTheme } from "next-themes";
+import { useTasks } from "@/context/TaskContext";
 import { FlagIcon } from "lucide-react";
 
 const priorityLabel = {
@@ -35,6 +37,7 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
 
     const { resolvedTheme } = useTheme()
     const priorityVariant = resolvedTheme === "dark" ? priorityVariantDark : priorityVariantLight
+    const { userMap, taskAssignees } = useTasks()
 
     return (
         <TaskDetailSheet task={task}>
@@ -64,19 +67,27 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                     {task.description && <CardDescription>{task.description}</CardDescription>}
                 </CardHeader>
 
-                <CardFooter className="justify-end">
-                    <AvatarGroup>
-                        <Avatar>
-                            <AvatarImage className="grayscale" src="/phineas.png" />
-                            <AvatarFallback>PF</AvatarFallback>
-                        </Avatar>
-                        <Avatar>
-                            <AvatarImage className="grayscale" src="/heinz.png" />
-                            <AvatarFallback>HD</AvatarFallback>
-                        </Avatar>
-                    </AvatarGroup>
-
-                </CardFooter>
+                {taskAssignees[task.id].length > 0 && (
+                    <CardFooter className="justify-end">
+                        <AvatarGroup>
+                            {
+                                taskAssignees[task.id].map(user => (
+                                    <Tooltip key={userMap[Number(user)].id}>
+                                        <TooltipTrigger>
+                                            <Avatar>
+                                                <AvatarFallback>
+                                                    {userMap[Number(user)].firstName.charAt(0)}{userMap[Number(user)].lastName.charAt(0)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="bottom">
+                                            {userMap[Number(user)].firstName}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                ))
+                            }
+                        </AvatarGroup>
+                    </CardFooter>)}
             </Card>
         </TaskDetailSheet>
     )
