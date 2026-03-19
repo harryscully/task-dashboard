@@ -11,24 +11,51 @@ export async function updateTaskColumn(taskId:string, columnId:string) {
 }
 
 export async function createTask(data: TaskSchema) {
+    const { assignees, ...taskData} = data
     const newTask = await prisma.task.create({
         data: {
-            ...data,
+            ...taskData,
             createdById: 4
         }
     })
+
+    for (const user of assignees ?? []) {
+        await prisma.taskAssignee.create({
+            data: {
+                taskId: newTask.id,
+                userId: Number(user)
+            }
+        })
+    }
+
     revalidatePath("/tasks")
     revalidatePath("/")
     return newTask
 }
 
 export async function updateTask(taskId:string, data: TaskSchema) {
+    const { assignees, ...taskData} = data
+    
+    await prisma.taskAssignee.deleteMany({
+        where: { taskId: taskId}
+    })
+    
     const updatedTask = await prisma.task.update({
         where: { id: taskId },
         data: {
-            ...data
+            ...taskData
         }
     })
+
+    for (const user of assignees ?? []) {
+        await prisma.taskAssignee.create({
+            data: {
+                taskId: taskId,
+                userId: Number(user)
+            }
+        })
+    }
+
     revalidatePath("/tasks")
     revalidatePath("/")
     return updatedTask
