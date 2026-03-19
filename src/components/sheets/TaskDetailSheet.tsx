@@ -74,7 +74,7 @@ export default function TaskDetailSheet({ task, children }: TaskDetailSheet) {
                         </>
                     )}
 
-                    {taskAssignees[task.id].length > 0 && (
+                    {(taskAssignees[task.id]?.length ?? 0) > 0 && (
                         <>
                             <p className="mt-6 mb-2 text-xs text-muted-foreground uppercase font-semibold">Assigned To</p>
                             <p>

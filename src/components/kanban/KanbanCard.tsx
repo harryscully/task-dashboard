@@ -67,7 +67,7 @@ export default function KanbanCard({ task }: { task: TaskModel }) {
                     {task.description && <CardDescription>{task.description}</CardDescription>}
                 </CardHeader>
 
-                {taskAssignees[task.id].length > 0 && (
+                {(taskAssignees[task.id]?.length ?? 0) > 0 && (
                     <CardFooter className="justify-end">
                         <AvatarGroup>
                             {
